@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { copy } from '../content/nl';
 import { listModuleMedia } from '../media/matching';
-import { mediaSlots } from '../media/scenarioMedia';
+import { activeMediaSlots } from '../media/scenarioMedia';
 import { defaultTeacherSettings } from '../media/teacherDefaults';
 import type { TeacherSettings, TrainingModule } from '../media/types';
 import { useAppState } from '../state/AppState';
@@ -130,7 +130,7 @@ export function TeacherScreen() {
       </button>
       <section className="card">
         <h2>Mediakoppeling</h2>
-        {mediaSlots
+        {activeMediaSlots()
           .filter((slot) => slot.module === 'verpleegkunde')
           .map((slot) => (
             <div className="field" key={slot.slotId}>

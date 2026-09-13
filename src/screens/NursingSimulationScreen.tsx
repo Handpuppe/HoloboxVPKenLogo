@@ -6,7 +6,6 @@ import { copy } from '../content/nl';
 import { PatientStage } from '../media/PatientStage';
 import { defaultDisplayConfig } from '../media/scale';
 import { slotById } from '../media/scenarioMedia';
-import { nursingPatient, nursingSteps } from '../nursing/scenario';
 import { currentNursingStep } from '../nursing/session';
 import { useAppState } from '../state/AppState';
 
@@ -22,9 +21,12 @@ export function NursingSimulationScreen() {
     audioBlocked,
     setAudioBlocked,
     unlockNursingAudio,
+    nursingContent,
   } = useAppState();
   const [pauseOpen, setPauseOpen] = useState(false);
   const [replayToken, setReplayToken] = useState(0);
+  const nursingPatient = nursingContent.patient;
+  const nursingSteps = nursingContent.steps;
   const step = nursingSession ? currentNursingStep(nursingSession) : undefined;
 
   if (!nursingSession) {

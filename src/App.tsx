@@ -20,42 +20,50 @@ import { TeacherScreen } from './screens/TeacherScreen';
 import { useAppState } from './state/AppState';
 
 export function App() {
-  const { scenarioValid, scenarioIssues } = useAppState();
+  const { scenariosReady, scenarioValid, scenarioIssues } = useAppState();
 
   return (
     <HoloboxShell>
       <a className="skip-link" href="#inhoud">
         {copy.skipLink}
       </a>
-      {!scenarioValid ? (
+      {!scenariosReady ? (
+        <>
+          <span hidden data-testid="app-loading" />
+          <LoadingScreen />
+        </>
+      ) : !scenarioValid ? (
         <ErrorScreen message="De scenario-configuratie is ongeldig." issues={scenarioIssues} />
       ) : (
-        <Routes>
-          <Route path="/" element={<HubScreen />} />
-          <Route path="/logopedie" element={<HomeScreen />} />
-          <Route path="/logopedie/briefing" element={<BriefingScreen />} />
-          <Route path="/logopedie/simulatie" element={<SimulationScreen />} />
-          <Route path="/logopedie/conclusie" element={<ConclusionScreen />} />
-          <Route path="/logopedie/resultaat" element={<ResultsScreen />} />
-          <Route path="/logopedie/resultaat/:resultId" element={<ResultsScreen />} />
-          <Route path="/verpleegkunde" element={<NursingHomeScreen />} />
-          <Route path="/verpleegkunde/briefing" element={<NursingBriefingScreen />} />
-          <Route path="/verpleegkunde/simulatie" element={<NursingSimulationScreen />} />
-          <Route path="/verpleegkunde/resultaat" element={<NursingResultsScreen />} />
-          <Route path="/geschiedenis" element={<PreviousResultsScreen />} />
-          <Route path="/resultaat/:resultId" element={<ResultsScreen />} />
-          <Route path="/docent" element={<TeacherScreen />} />
-          <Route path="/docent/voorbeeld" element={<TeacherPreviewScreen />} />
-          <Route path="/over" element={<AboutScreen />} />
-          <Route path="/laden" element={<LoadingScreen />} />
-          <Route path="/storing" element={<ErrorScreen />} />
-          <Route path="/briefing" element={<Navigate to="/logopedie/briefing" replace />} />
-          <Route path="/simulatie" element={<Navigate to="/logopedie/simulatie" replace />} />
-          <Route path="/conclusie" element={<Navigate to="/logopedie/conclusie" replace />} />
-          <Route path="/resultaat" element={<Navigate to="/logopedie/resultaat" replace />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
-          <Route path="*" element={<ErrorScreen />} />
-        </Routes>
+        <>
+          <span hidden data-testid="app-ready" />
+          <Routes>
+            <Route path="/" element={<HubScreen />} />
+            <Route path="/logopedie" element={<HomeScreen />} />
+            <Route path="/logopedie/briefing" element={<BriefingScreen />} />
+            <Route path="/logopedie/simulatie" element={<SimulationScreen />} />
+            <Route path="/logopedie/conclusie" element={<ConclusionScreen />} />
+            <Route path="/logopedie/resultaat" element={<ResultsScreen />} />
+            <Route path="/logopedie/resultaat/:resultId" element={<ResultsScreen />} />
+            <Route path="/verpleegkunde" element={<NursingHomeScreen />} />
+            <Route path="/verpleegkunde/briefing" element={<NursingBriefingScreen />} />
+            <Route path="/verpleegkunde/simulatie" element={<NursingSimulationScreen />} />
+            <Route path="/verpleegkunde/resultaat" element={<NursingResultsScreen />} />
+            <Route path="/geschiedenis" element={<PreviousResultsScreen />} />
+            <Route path="/resultaat/:resultId" element={<ResultsScreen />} />
+            <Route path="/docent" element={<TeacherScreen />} />
+            <Route path="/docent/voorbeeld" element={<TeacherPreviewScreen />} />
+            <Route path="/over" element={<AboutScreen />} />
+            <Route path="/laden" element={<LoadingScreen />} />
+            <Route path="/storing" element={<ErrorScreen />} />
+            <Route path="/briefing" element={<Navigate to="/logopedie/briefing" replace />} />
+            <Route path="/simulatie" element={<Navigate to="/logopedie/simulatie" replace />} />
+            <Route path="/conclusie" element={<Navigate to="/logopedie/conclusie" replace />} />
+            <Route path="/resultaat" element={<Navigate to="/logopedie/resultaat" replace />} />
+            <Route path="/home" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<ErrorScreen />} />
+          </Routes>
+        </>
       )}
     </HoloboxShell>
   );

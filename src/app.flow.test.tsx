@@ -45,7 +45,7 @@ describe('application flow', () => {
 
   it('starts a simulation from the home screen', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     expect(screen.getByTestId('screen-home')).toBeInTheDocument();
     await startIntake(user);
     expect(screen.getByTestId('virtual-client')).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe('application flow', () => {
 
   it('selects a response, blocks double selection, and moves to the next node', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     const first = screen.getByTestId('option-d1-high');
     await user.click(first);
@@ -74,7 +74,7 @@ describe('application flow', () => {
 
   it('opens and saves notes', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     await user.click(screen.getByTestId('btn-notes'));
     const dialog = screen.getByTestId('dialog-notes');
@@ -88,7 +88,7 @@ describe('application flow', () => {
 
   it('pauses and resumes', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     await user.click(screen.getByTestId('btn-pause'));
     expect(screen.getByTestId('dialog-pause')).toBeInTheDocument();
@@ -100,11 +100,11 @@ describe('application flow', () => {
 
   it('restores an unfinished session after reload', async () => {
     const user = userEvent.setup();
-    const first = renderApp();
+    const first = await renderApp();
     await startIntake(user);
     await choose(user, 'd1-high');
     first.unmount();
-    renderApp(['/logopedie']);
+    await renderApp(['/logopedie']);
     expect(screen.getByTestId('dialog-resume')).toBeInTheDocument();
     await user.click(screen.getByTestId('btn-resume-session'));
     expect(screen.getByTestId('screen-simulation')).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('application flow', () => {
 
   it('completes the clinical conclusion and shows scores', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     for (const optionId of optionIdsByQuality(aphasiaIntakeScenario, 'high')) {
       await choose(user, optionId);
@@ -140,7 +140,7 @@ describe('application flow', () => {
 
   it('saves, reopens and deletes a result after confirmation', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     for (const optionId of optionIdsByQuality(aphasiaIntakeScenario, 'high')) {
       await choose(user, optionId);
@@ -177,7 +177,7 @@ describe('application flow', () => {
 
   it('rejects an incomplete clinical conclusion', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     await user.click(screen.getByTestId('btn-end'));
     await user.click(screen.getByTestId('btn-confirm-end'));
@@ -189,7 +189,7 @@ describe('application flow', () => {
 
   it('supports keyboard navigation on the home screen', async () => {
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await user.tab();
     expect(document.getElementById('inhoud')).toHaveFocus();
     await user.tab();
@@ -204,19 +204,19 @@ describe('application flow', () => {
     vi.spyOn(proto, 'getItem').mockImplementation(() => {
       throw new Error('quota');
     });
-    renderApp();
+    await renderApp();
     expect(screen.getByTestId('storage-unavailable')).toBeInTheDocument();
   });
 
-  it('recovers from corrupted local storage', () => {
+  it('recovers from corrupted local storage', async () => {
     window.localStorage.setItem(STORAGE_KEY, '{broken');
-    renderApp();
+    await renderApp();
     expect(screen.getByTestId('screen-home')).toBeInTheDocument();
     expect(screen.getByTestId('storage-notice')).toBeInTheDocument();
   });
 
-  it('does not animate the client when reduced motion is requested', () => {
-    renderApp(['/laden']);
+  it('does not animate the client when reduced motion is requested', async () => {
+    await renderApp(['/laden']);
     expect(screen.getByTestId('screen-loading')).toBeInTheDocument();
     const svg = document.querySelector('.client-svg');
     expect(svg).toBeNull();
@@ -249,7 +249,7 @@ describe('logopedie answer stills', () => {
     ];
     const seen = new Set<string>();
     for (const face of faces) {
-      renderApp();
+      await renderApp();
       await startIntake(user);
       await user.click(screen.getByTestId(`option-${face.optionId}`));
       const avatar = screen.getByTestId('logopedie-avatar');
@@ -280,7 +280,7 @@ describe('reduced motion client', () => {
       }),
     });
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     await user.click(screen.getByTestId('option-d1-low'));
     expect(screen.getByTestId('virtual-client')).toHaveAttribute('data-emotion', 'frustrated');
@@ -292,7 +292,7 @@ describe('focus management', () => {
   it('moves focus to the dialog when notes open', async () => {
     mockReducedMotion();
     const user = userEvent.setup();
-    renderApp();
+    await renderApp();
     await startIntake(user);
     await user.click(screen.getByTestId('btn-notes'));
     await waitFor(() => {

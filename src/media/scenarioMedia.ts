@@ -160,6 +160,16 @@ export const mediaSlots: MediaSlotConfig[] = [
   },
 ];
 
+let mediaSlotsOverride: MediaSlotConfig[] | null = null;
+
+export function setMediaSlotsOverride(slots: MediaSlotConfig[] | null): void {
+  mediaSlotsOverride = slots;
+}
+
+export function activeMediaSlots(): MediaSlotConfig[] {
+  return mediaSlotsOverride ?? mediaSlots;
+}
+
 export function slotById(slotId: string): MediaSlotConfig | undefined {
-  return mediaSlots.find((slot) => slot.slotId === slotId);
+  return activeMediaSlots().find((slot) => slot.slotId === slotId);
 }

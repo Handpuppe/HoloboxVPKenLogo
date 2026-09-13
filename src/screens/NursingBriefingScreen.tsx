@@ -1,16 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { copy } from '../content/nl';
-import {
-  nursingLearningObjectives,
-  nursingPatient,
-  nursingScenarioMeta,
-} from '../nursing/scenario';
 import { useAppState } from '../state/AppState';
 
 export function NursingBriefingScreen() {
   const navigate = useNavigate();
-  const { nursingSession, startNursing, unlockNursingAudio } = useAppState();
+  const { nursingSession, startNursing, unlockNursingAudio, nursingContent } = useAppState();
+  const nursingPatient = nursingContent.patient;
+  const nursingScenarioMeta = nursingContent.meta;
+  const nursingLearningObjectives = nursingContent.learningObjectives;
 
   return (
     <Screen

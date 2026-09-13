@@ -1,14 +1,15 @@
-import { render, type RenderOptions } from '@testing-library/react';
+import { render, waitFor, screen, type RenderOptions } from '@testing-library/react';
 import { MemoryRouter, type MemoryRouterProps } from 'react-router-dom';
 import type { ReactElement } from 'react';
+import { expect } from 'vitest';
 import { App } from '../App';
 import { AppStateProvider } from '../state/AppState';
 
-export function renderApp(
+export async function renderApp(
   initialEntries: MemoryRouterProps['initialEntries'] = ['/'],
   options?: RenderOptions,
 ) {
-  return render(
+  const view = render(
     <MemoryRouter initialEntries={initialEntries}>
       <AppStateProvider>
         <App />
@@ -16,6 +17,10 @@ export function renderApp(
     </MemoryRouter>,
     options,
   );
+  await waitFor(() => {
+    expect(screen.getByTestId('app-ready')).toBeInTheDocument();
+  });
+  return view;
 }
 
 export function renderWithProviders(ui: ReactElement, initialEntries: string[] = ['/']) {

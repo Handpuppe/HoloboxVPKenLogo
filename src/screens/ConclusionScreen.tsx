@@ -2,19 +2,18 @@ import { useMemo, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { copy } from '../content/nl';
-import { aphasiaIntakeScenario } from '../data/aphasiaIntakeScenario';
 import { EMPTY_CONCLUSION, sanitizeConclusion, validateConclusion } from '../domain/conclusion';
 import { CONCLUSION_TEXT_MAX_LENGTH, type ClinicalConclusion } from '../domain/types';
 import { useAppState } from '../state/AppState';
 
 export function ConclusionScreen() {
   const navigate = useNavigate();
-  const { session, submitConclusion } = useAppState();
+  const { session, submitConclusion, logopedieScenario } = useAppState();
   const [form, setForm] = useState<ClinicalConclusion>(session?.conclusion ?? EMPTY_CONCLUSION);
   const [errors, setErrors] = useState<ReturnType<typeof validateConclusion>['errors']>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const fields = aphasiaIntakeScenario.conclusionFields;
+  const fields = logopedieScenario.conclusionFields;
   const textByField = useMemo(
     () => ({
       dailyLifeEffect: 'dailyLifeEffect' as const,
@@ -55,7 +54,7 @@ export function ConclusionScreen() {
         onSubmit={(event) => {
           event.preventDefault();
           const clean = sanitizeConclusion(form);
-          const result = validateConclusion(clean, aphasiaIntakeScenario);
+          const result = validateConclusion(clean, logopedieScenario);
           setSubmitted(true);
           setErrors(result.errors);
           if (!result.valid) {
